@@ -1,6 +1,8 @@
 package io.github.lefpap.user.domain.service;
 
 import io.github.lefpap.user.domain.dto.GetUserResult;
+import io.github.lefpap.user.domain.dto.UpdateUserInfoCommand;
+import io.github.lefpap.user.domain.entity.UserEntity;
 import io.github.lefpap.user.domain.mapper.UserServiceMapper;
 import io.github.lefpap.user.domain.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -23,5 +25,13 @@ public class UserService {
         return users.findById(userId)
             .map(mapper::toResult)
             .orElseThrow(() -> new EntityNotFoundException("User not found"));
+    }
+
+    public void updateUserInfo(UpdateUserInfoCommand cmd) {
+        UserEntity user = users.findById(cmd.userId())
+            .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        user.setDisplayName(cmd.displayName());
+        users.save(user);
     }
 }

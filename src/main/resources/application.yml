@@ -31,3 +31,9 @@ app:
     rsa:
       private-key: "file:./certs/private.pem"
       public-key: "file:./certs/public.pem"
+
+    refresh-cookie:
+      name: refresh_token
+      path: /api/v1/auth
+      same-site: Lax   # If SPA on another domain: None (requires HTTPS)
+      secure: true    # true in prod

@@ -2,6 +2,7 @@ package io.github.lefpap.auth.domain.service;
 
 import io.github.lefpap.auth.config.JwtProperties;
 import io.github.lefpap.user.domain.entity.UserEntity;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.InstantSource;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class AuthTokenService {
@@ -24,7 +27,7 @@ public class AuthTokenService {
         this.jwtEncoder = jwtEncoder;
     }
 
-    public String generateToken(UserEntity user) {
+    public Jwt generateAccessToken(UserEntity user) {
         Instant now = time.instant();
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
@@ -35,6 +38,21 @@ public class AuthTokenService {
             .claim("scope", "SCOPE_user")
             .build();
 
-        return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+        return jwtEncoder.encode(JwtEncoderParameters.from(claims));
+    }
+
+    public Jwt generateRefreshToken(UserEntity user) {
+        Instant now = time.instant();
+
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+            .issuer(props.issuer())
+            .issuedAt(now)
+            .expiresAt(now.plus(props.refreshTtl()))
+            .subject(user.getId().toString())
+            .id(UUID.randomUUID().toString())
+            .audience(List.of("refresh"))
+            .build();
+
+        return jwtEncoder.encode(JwtEncoderParameters.from(claims));
     }
 }

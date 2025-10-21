@@ -1,7 +1,7 @@
 package io.github.lefpap.auth.web.mapper;
 
 import io.github.lefpap.auth.domain.dto.SigninCommand;
-import io.github.lefpap.auth.domain.dto.SigninResult;
+import io.github.lefpap.auth.domain.dto.AuthTokenResult;
 import io.github.lefpap.auth.domain.dto.SignupCommand;
 import io.github.lefpap.auth.domain.dto.SignupResult;
 import io.github.lefpap.auth.web.dto.ApiSigninRequest;
@@ -34,8 +34,8 @@ public class AuthWebMapper {
         );
     }
 
-    public ApiSigninResponse toWeb(@NonNull SigninResult result) {
-        return new ApiSigninResponse(result.accessToken());
+    public ApiSigninResponse toWeb(@NonNull AuthTokenResult result) {
+        return new ApiSigninResponse(result.accessToken().getTokenValue());
     }
 
 }

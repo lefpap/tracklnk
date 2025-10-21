@@ -20,5 +20,4 @@ public class TracklnkApplication {
         return InstantSource.system();
     }
 
-
 }
